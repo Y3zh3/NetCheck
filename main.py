@@ -36,5 +36,11 @@ try:
     else:
         print("Error al consultar la API:", respuesta.status_code)
 
-except requests.exceptions.RequestException:
-    print("Error: No se pudo conectar con la API.")
+except requests.exceptions.Timeout:
+    print("Error: La API tardó demasiado en responder.")
+
+except requests.exceptions.ConnectionError:
+    print("Error: No hay conexión con la API.")
+
+except requests.exceptions.RequestException as error:
+    print("Error general al consultar la API:", error)
