@@ -1,36 +1,40 @@
 import csv
+import requests
 
-print("NETCHECK - Inventario de dispositivos")
+print("NETCHECK - Inventario desde API")
 
-dispositivos = [
-    {"nombre": "Router Principal", "ip": "192.168.1.1", "estado": "Activo"},
-    {"nombre": "Switch Oficina", "ip": "192.168.1.2", "estado": "Inactivo"},
-    {"nombre": "Access Point Aula", "ip": "192.168.1.3", "estado": "Activo"}
-]
+url = "https://jsonplaceholder.typicode.com/users"
 
-activos = 0
-inactivos = 0
+try:
+    respuesta = requests.get(url, timeout=10)
 
-for dispositivo in dispositivos:
-    print("\nNombre:", dispositivo["nombre"])
-    print("IP:", dispositivo["ip"])
-    print("Estado:", dispositivo["estado"])
+    if respuesta.status_code == 200:
+        datos = respuesta.json()
+        dispositivos = []
 
-    if dispositivo["estado"] == "Activo":
-        activos += 1
+        for usuario in datos[:5]:
+            dispositivo = {
+                "nombre": "Equipo " + usuario["name"],
+                "ip": usuario["address"]["geo"]["lat"],
+                "estado": "Activo"
+            }
+            dispositivos.append(dispositivo)
+
+        for dispositivo in dispositivos:
+            print("\nNombre:", dispositivo["nombre"])
+            print("IP:", dispositivo["ip"])
+            print("Estado:", dispositivo["estado"])
+
+        with open("inventario.csv", "w", newline="") as archivo:
+            columnas = ["nombre", "ip", "estado"]
+            escritor = csv.DictWriter(archivo, fieldnames=columnas)
+            escritor.writeheader()
+            escritor.writerows(dispositivos)
+
+        print("\nArchivo inventario.csv actualizado correctamente.")
+
     else:
-        inactivos += 1
-        print("ALERTA: Este dispositivo necesita revisión.")
+        print("Error al consultar la API:", respuesta.status_code)
 
-print("\nRESUMEN")
-print("Total de dispositivos:", len(dispositivos))
-print("Activos:", activos)
-print("Inactivos:", inactivos)
-
-with open("inventario.csv", "w", newline="") as archivo:
-    columnas = ["nombre", "ip", "estado"]
-    escritor = csv.DictWriter(archivo, fieldnames=columnas)
-    escritor.writeheader()
-    escritor.writerows(dispositivos)
-
-print("\nArchivo inventario.csv creado correctamente.")
+except requests.exceptions.RequestException:
+    print("Error: No se pudo conectar con la API.")
