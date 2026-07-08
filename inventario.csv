@@ -1,6 +1,7 @@
-nombre,ip,estado
-Equipo Leanne Graham,192.168.1.11,Activo
-Equipo Ervin Howell,192.168.1.12,Activo
-Equipo Clementine Bauch,192.168.1.13,Inactivo
-Equipo Patricia Lebsack,192.168.1.14,Activo
-Equipo Chelsey Dietrich,192.168.1.15,Activo
+id,nombre,ip,estado
+1,Switch Capa 3 Principal,10.0.0.5,Activo
+2,Access Point Almacén 2,192.168.5.20,Inactivo
+3,Servidor Syslog / Monitoreo,172.16.0.100,Activo
+4,Servidor Syslog / Monitoreo,172.16.0.100,Activo
+5,Firewall Sucursal Norte,10.10.10.1,Activo
+6,Router Enlace Proveedor B,200.150.40.1,Inactivo
